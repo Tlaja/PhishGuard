@@ -226,13 +226,13 @@ def _print_vt_results(vt_results: list[dict]) -> None:
                   f"{r['harmless']} clean  "
                   f"({r['total']} vendors total)")
 
-# SHODAN
-
-
 
 # MAIN
 def read_multiline(prompt: str) -> str:
-
+    """
+    Read a multiline paste from the user.
+    The user signals they are done by entering a blank line.
+    """
     print(prompt)
     lines = []
     while True:
@@ -285,24 +285,14 @@ def main():
     print("════════════════════════════════════════════════════════════════")
 
     while True:
-        # ── Step 1: sender address ────────────────────────────────────────────
-        print("\n📨  Sender email address (or 'quit'):")
-        sender = input().strip()
-        if sender.lower() == "quit":
+        email = read_multiline("\nPaste email (blank line when done, 'quit' to exit):")
+        if email.strip().lower() == "quit":
             print("Goodbye.")
             break
-
-        # ── Step 2: email body ────────────────────────────────────────────────
-        body = read_multiline("\n📧  Paste email body (blank line when done):")
-        if body.strip().lower() == "quit":
-            print("Goodbye.")
-            break
-        if not body.strip():
-            print("   ⚠️  No body entered, try again.")
+        if not email.strip():
+            print("No input received, try again.")
             continue
-
-        # ── Step 3: analyse & summarise ───────────────────────────────────────
-        predict_one(pipeline, threshold, sender, body)
+        predict_one(pipeline, threshold, email)
 
 
 if __name__ == "__main__":
